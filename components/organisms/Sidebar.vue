@@ -41,22 +41,11 @@
       </div>
     </div>
 
-    <div v-else class="mt-5 px-4">
-      <p v-if="!selectedComponent">
+    <div v-else class="mt-3 p-2">
+      <p v-if="!selectedComponentProps">
         Please select a component to edit in the editor section.
       </p>
-      <div v-else>
-        <!-- Display editable properties of the selected component -->
-        <p>Editing: {{ selectedComponent.name }}</p>
-        <div v-for="(value, key) in selectedComponentProps" :key="key">
-          <label :for="key">{{ key }}</label>
-          <input
-            :id="key"
-            v-model="selectedComponentProps[key]"
-            @input="updateComponentProp(key, selectedComponentProps[key])"
-          />
-        </div>
-      </div>
+      <SidebarSettings v-else />
     </div>
 
     <!-- Modal for Editing Page -->
@@ -70,85 +59,63 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, computed } from "vue";
 import { useMainStore } from "@/stores/main";
 import Button from "@/components/atoms/Button.vue";
 import Logo from "@/components/atoms/Logo.vue";
 import SidebarMenu from "@/components/molucules/SidebarMenuOption.vue";
 import EditPageModal from "@/components/molucules/EditPageModal.vue";
+import SidebarSettings from "./SidebarSettings.vue";
 
-export default {
-  components: { Button, Logo, SidebarMenu, EditPageModal },
-  setup() {
-    const store = useMainStore();
+const store = useMainStore();
 
-    // Define menu items
-    const menuItems = ref([{ label: "Pages" }, { label: "Settings" }]);
+// Define menu items
+const menuItems = ref([{ label: "Pages" }, { label: "Settings" }]);
 
-    // Bind state from Pinia
-    const pages = computed(() => store.pages);
-    const activeTab = computed(() => store.sidebarMode);
-    const selectedComponent = computed(() => store.selectedComponent);
-    const selectedComponentProps = computed(() =>
-      store.getComponentProps(store.selectedComponentId)
-    );
+// Bind state from Pinia
+const pages = computed(() => store.pages);
+const activeTab = computed(() => store.sidebarMode);
+const selectedComponent = computed(() => store.selectedComponent);
+const selectedId = computed(() => store.selectedComponentId);
+const selectedComponentProps= computed(() => store.editableComponentProps[selectedId.value]);
 
-    console.log("selectedComponentProps",selectedComponentProps.value)
+// console.log("selectedComponentProps", selectedComponentProps.value);
 
-    // Modal state
-    const showModal = ref(false);
-    const editablePage = ref({});
+// Modal state
+const showModal = ref(false);
+const editablePage = ref({});
 
-    // Functions
-    const addNewPage = () => {
-      store.addPage({ name: "New Page" });
-    };
+// Functions
+const addNewPage = () => {
+  store.addPage({ name: "New Page" });
+};
 
-    const openEditModal = (page) => {
-      editablePage.value = { ...page };
-      showModal.value = true;
-    };
+const openEditModal = (page) => {
+  editablePage.value = { ...page };
+  showModal.value = true;
+};
 
-    const closeModal = () => {
-      showModal.value = false;
-      editablePage.value = {};
-    };
+const closeModal = () => {
+  showModal.value = false;
+  editablePage.value = {};
+};
 
-    const savePageName = () => {
-      store.updatePage(editablePage.value);
-      closeModal();
-    };
+const savePageName = () => {
+  store.updatePage(editablePage.value);
+  closeModal();
+};
 
-    const deletePage = (id) => {
-      store.deletePage(id);
-      closeModal();
-    };
+const deletePage = (id) => {
+  store.deletePage(id);
+  closeModal();
+};
 
-    const selectPage = (id) => {
-      store.setSelectedPage(id);
-    };
+const selectPage = (id) => {
+  store.setSelectedPage(id);
+};
 
-    const updateComponentProp = (key, value) => {
-      store.updateComponentProp(store.selectedComponentId, key, value);
-    };
-
-    return {
-      menuItems,
-      pages,
-      activeTab,
-      selectedComponent,
-      selectedComponentProps,
-      addNewPage,
-      openEditModal,
-      closeModal,
-      savePageName,
-      deletePage,
-      selectPage,
-      updateComponentProp,
-      showModal,
-      editablePage,
-    };
-  },
+const updateComponentProp = (key, value) => {
+  store.updateComponentProp(store.selectedComponentId, key, value);
 };
 </script>

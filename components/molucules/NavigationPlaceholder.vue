@@ -23,7 +23,8 @@ export default {
   props: {
     id: {
       type: String,
-      required: true,
+      // required: true,
+      default: "placeholder1"
     },
   },
   setup(props) {

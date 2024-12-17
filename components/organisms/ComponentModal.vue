@@ -31,9 +31,9 @@ const emit = defineEmits(["close"]);
 
 const store = useMainStore();
 const components = computed(() => {
-  if (store.selectedComponentId.startsWith("placeholder1")) {
+  if (store.selectedComponentId && store.selectedComponentId.startsWith("placeholder1")) {
     return store.registeredComponents["Navigation"];
-  } else if (store.selectedComponentId.startsWith("placeholder2")) {
+  } else if (store.selectedComponentId && store.selectedComponentId.startsWith("placeholder2")) {
     return store.registeredComponents["bodyComponent"];
   }
   return [];

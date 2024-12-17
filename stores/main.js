@@ -1,4 +1,6 @@
 import { defineStore } from "pinia";
+import { placeholderIds } from "~/utls/placeholders";
+import { componentProps } from "~/utls/componentProps";
 
 export const useMainStore = defineStore("main", {
   state: () => ({
@@ -51,36 +53,62 @@ export const useMainStore = defineStore("main", {
       this.sidebarMode = "pages";
     },
     setSelectedComponent(componentId) {
+      // console.log("componentId issss", componentId);
+
       this.selectedComponentId = componentId;
       this.sidebarMode = "settings";
+
+      if (!placeholderIds.includes(componentId)) {
+        const component = this.pages
+          .find((p) => p.id === this.selectedPageId)
+          ?.content.find((c) => c.id === componentId);
+        if (component) {
+          // console.log("component props",component)
+          this.editableComponentProps[componentId] = component.props;
+        }
+      }
+      // console.log("editableComponentProps", this.editableComponentProps);
     },
     setModalVisibility(visible) {
       this.showModal = visible;
     },
     replacePlaceholder(pageId, placeholderId, component) {
       const page = this.pages.find((p) => p.id === pageId);
-      console.log("selected page content is", page?.content);
-      console.log("placeholderId to be replaced", placeholderId);
       if (page) {
         const index = page.content.findIndex((c) => c.id === placeholderId);
         if (index !== -1) {
+          const props = componentProps[component.id] || {};
+          const defaultProps = {
+            styles: Object.keys(props.styles).reduce((acc, key) => {
+              acc[key] = props.styles[key].value;
+              return acc;
+            }, {}),
+            content: { ...props.content },
+          };
           page.content.splice(index, 1, {
             id: component.id,
             name: component.component,
-            props: {},
+            props: defaultProps,
           });
         }
+        this.setSelectedComponent(component.id);
       }
-      console.log(
-        "the updated page with selected component modal",
-        page?.content
-      );
     },
     updateComponentProp(componentId, key, value) {
+      // console.log("componentId", componentId, " key", key, " value", value);
       if (!this.editableComponentProps[componentId]) {
         this.editableComponentProps[componentId] = {};
       }
       this.editableComponentProps[componentId][key] = value;
+
+      // Update the component's props in the page content
+      const page = this.pages.find((p) => p.id === this.selectedPageId);
+      if (page) {
+        const component = page.content.find((c) => c.id === componentId);
+        if (component) {
+          component.props[key] = value;
+        }
+      }
     },
   },
   getters: {
@@ -90,7 +118,13 @@ export const useMainStore = defineStore("main", {
       );
     },
     selectedComponent(state) {
-      return state.registeredComponents[state.selectedComponentId] || null;
+      const page = state.pages.find((p) => p.id === state.selectedPageId);
+      if (page) {
+        return (
+          page.content.find((c) => c.id === state.selectedComponentId) || null
+        );
+      }
+      return null;
     },
     getComponentProps: (state) => (componentId) => {
       return state.editableComponentProps[componentId] || {};

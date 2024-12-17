@@ -55,6 +55,7 @@ const componentMap = {
 };
 
 const selectComponent = (component) => {
+  console.log("clicking component from editor",component)
   store.setSelectedComponent(component.id);
 };
 
@@ -63,7 +64,9 @@ const closeModal = () => {
 };
 
 const updateComponentProp = (componentId, event) => {
+  console.log("updateComponentProp",componentId)
   const { key, value } = event;
+  console.log("key, value", key, value)
   store.updateComponentProp(componentId, key, value);
 };
 
