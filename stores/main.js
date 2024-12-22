@@ -53,8 +53,6 @@ export const useMainStore = defineStore("main", {
       this.sidebarMode = "pages";
     },
     setSelectedComponent(componentId) {
-      // console.log("componentId issss", componentId);
-
       this.selectedComponentId = componentId;
       this.sidebarMode = "settings";
 
@@ -63,16 +61,22 @@ export const useMainStore = defineStore("main", {
           .find((p) => p.id === this.selectedPageId)
           ?.content.find((c) => c.id === componentId);
         if (component) {
-          // console.log("component props",component)
           this.editableComponentProps[componentId] = component.props;
         }
       }
-      // console.log("editableComponentProps", this.editableComponentProps);
     },
     setModalVisibility(visible) {
       this.showModal = visible;
     },
     replacePlaceholder(pageId, placeholderId, component) {
+      console.log(
+        "pageId",
+        pageId,
+        " placeholderId ",
+        placeholderId,
+        " component",
+        component
+      );
       const page = this.pages.find((p) => p.id === pageId);
       if (page) {
         const index = page.content.findIndex((c) => c.id === placeholderId);
@@ -80,7 +84,10 @@ export const useMainStore = defineStore("main", {
           const props = componentProps[component.id] || {};
           const defaultProps = {
             styles: Object.keys(props.styles).reduce((acc, key) => {
-              acc[key] = props.styles[key].value;
+              acc[key] = {
+                value: props.styles[key].value,
+                type: props.styles[key].type,
+              };
               return acc;
             }, {}),
             content: { ...props.content },
@@ -95,18 +102,38 @@ export const useMainStore = defineStore("main", {
       }
     },
     updateComponentProp(componentId, key, value) {
-      // console.log("componentId", componentId, " key", key, " value", value);
+      console.log(
+        "component props gets updated with componentId",
+        componentId,
+        " key ",
+        key,
+        " value",
+        value
+      );
+
       if (!this.editableComponentProps[componentId]) {
         this.editableComponentProps[componentId] = {};
       }
-      this.editableComponentProps[componentId][key] = value;
+
+      const [section, propKey] = key.split(".");
+
+      if (section === "content") {
+        this.editableComponentProps[componentId][section][propKey] = value;
+      } else if (section === "styles") {
+        this.editableComponentProps[componentId][section][propKey].value =
+          value;
+      }
 
       // Update the component's props in the page content
       const page = this.pages.find((p) => p.id === this.selectedPageId);
       if (page) {
         const component = page.content.find((c) => c.id === componentId);
         if (component) {
-          component.props[key] = value;
+          if (section === "content") {
+            component.props[section][propKey] = value;
+          } else if (section === "styles") {
+            component.props[section][propKey].value = value;
+          }
         }
       }
     },

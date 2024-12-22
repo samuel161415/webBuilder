@@ -1,47 +1,78 @@
 <template>
-  <div :class="backgroundClass" class="p-8">
-    <NavigationOption :navigationClass="navigationClass" />
-    <div class="flex mt-8">
-      <div class="w-1/2">
-        <img
-          :src="imageSrc"
-          :alt="imageAlt"
-          :style="{ height: imageHeight }"
-        />
-      </div>
-      <div class="w-1/2 text-center">
-        <h1 class="text-4xl font-bold" :style="{ color: textColor }">
-          {{ title }}
+  <div :style="{ backgroundColor: styles.backgroundColor.value }" class="p-8">
+    <NavigationOption
+      :navigationClass="styles.navigationDisplay.value"
+      :navigationJustify="styles.navigationJustify.value"
+      :navigationColor="styles.navigationColor.value"
+      :items="content.items"
+    />
+    <div :style="{ display: styles.display.value }" class="mt-8">
+      <div
+        class="w-1/2 text-center flex flex-col justify-center items-center px-5"
+      >
+        <h1
+          class="text-4xl font-bold"
+          :style="{ color: styles.textColor.value }"
+          contenteditable="true"
+          @input="updateContent('title', $event)"
+        >
+          {{ content.title }}
         </h1>
-        <p class="mt-4 text-lg" :style="{ color: textColor }">
-          {{ description }}
+        <p
+          class="my-4 text-lg"
+          :style="{ color: styles.textColor.value }"
+          contenteditable="true"
+          @input="updateContent('description', $event)"
+        >
+          {{ content.description }}
         </p>
-        <!-- <Button :bgColor="buttonBgColor" :textColor="buttonTextColor">
-          {{ buttonText }}
-        </Button> -->
+        <button
+          :style="{
+            backgroundColor: styles.buttonBgColor.value,
+            color: styles.buttonTextColor.value,
+            padding: styles.buttonPadding.value,
+          }"
+          class="rounded"
+        >
+          <div
+            contenteditable="true"
+            @input="updateContent('buttonText', $event)"
+          >
+            {{ content.buttonText }}
+          </div>
+        </button>
+      </div>
+      <div class="w-1/2 px-5 rounded-xl overflow-hidden">
+        <img
+          :src="content.imageSrc"
+          :alt="content.imageAlt"
+          :style="{
+            height: styles.imageHeight.value,
+            width: styles.imageWidth.value,
+            borderRadius: styles.imageBorderRadius.value,
+          }"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { defineEmits } from "vue";
+import { useMainStore } from "@/stores/main";
 import NavigationOption from "@/components/molucules/NavigationOption.vue";
-import Button from "@/components/atoms/Button.vue";
 
 const props = defineProps({
-  backgroundClass: { type: String, default: "bg-gray-500" },
-  navigationClass: { type: String, default: "flex justify-between" },
-  textColor: { type: String, default: "#ffffff" },
-  title: { type: String, default: "Hero Title" },
-  description: { type: String, default: "This is a hero description." },
-  imageSrc: { type: String, default: "/images/imbg.jpg" },
-  imageAlt: { type: String, default: "Image description" },
-  imageHeight: { type: String, default: "300px" },
-  buttonBgColor: { type: String, default: "bg-blue-500" },
-  buttonTextColor: { type: String, default: "text-white" },
-  buttonText: { type: String, default: "Click Me" },
+  content: { type: Object, required: true },
+  styles: { type: Object, required: true },
 });
 
+const emit = defineEmits(["input"]);
+const store = useMainStore();
 
+const updateContent = (key, event) => {
+  const value = event.target.innerText;
+  emit("input", { key, value });
+  store.updateComponentProp(store.selectedComponentId, `content.${key}`, value);
+};
 </script>
