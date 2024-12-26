@@ -23,7 +23,9 @@
 import { ref, watch } from "vue";
 
 const props = defineProps({
-  label: { type: String, required: true },
+  label: { type: String, 
+    // required: true 
+  },
   value: { type: String, default: "0px" },
 });
 

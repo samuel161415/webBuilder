@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 h-screen bg-white p-4">
+  <div class="flex-1 h-full overflow-auto bg-white p-4">
     <div class="w-full relative flex justify-center py-1 border mb-2">
       <Button
         bgColor="bg-green-500"

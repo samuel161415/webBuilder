@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex">
+    <div class="flex h-screen border border-blue-500 overflow-hidden">
       <Sidebar />
       <Editor />
     </div>

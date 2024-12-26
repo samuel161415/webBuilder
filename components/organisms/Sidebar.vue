@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="md:w-1/4 lg:w-1/5 h-screen overflow-auto bg-gray-100 py-4"
-  >
+  <div class="md:w-1/4 lg:w-1/5 h-full overflow-auto bg-gray-100 py-4">
     <!-- Logo -->
     <Logo />
     <!-- Sidebar Menu -->
@@ -80,7 +78,9 @@ const pages = computed(() => store.pages);
 const activeTab = computed(() => store.sidebarMode);
 const selectedComponent = computed(() => store.selectedComponent);
 const selectedId = computed(() => store.selectedComponentId);
-const selectedComponentProps= computed(() => store.editableComponentProps[selectedId.value]);
+const selectedComponentProps = computed(
+  () => store.editableComponentProps[selectedId.value]
+);
 
 // console.log("selectedComponentProps", selectedComponentProps.value);
 

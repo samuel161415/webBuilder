@@ -11,9 +11,24 @@ export const useMainStore = defineStore("main", {
     showModal: false, // Modal visibility state
     registeredComponents: {
       Navigation: [
-        { id: "hero1", name: "Hero with Background Color", component: "Hero1" },
-        { id: "hero2", name: "Hero with Background Image", component: "Hero2" },
-        { id: "hero3", name: "Hero with Image and Text", component: "Hero3" },
+        {
+          id: "hero1",
+          name: "Hero with Background Color",
+          imgSrc: "/images/imbg.jpg",
+          component: "Hero1",
+        },
+        {
+          id: "hero2",
+          name: "Hero with Background Image",
+          imgSrc: "/images/hero3.png",
+          component: "Hero2",
+        },
+        {
+          id: "hero3",
+          name: "Hero with Image and Text",
+          imgSrc: "/images/hero3.png",
+          component: "Hero3",
+        },
       ],
       bodyComponent: [
         { id: "simpleBody", name: "Simple Body", component: "SimpleBody" },
@@ -34,7 +49,7 @@ export const useMainStore = defineStore("main", {
           { id: "placeholder1", name: "NavigationPlaceholder", props: {} },
           { id: "placeholder2", name: "ComponentPlaceholder", props: {} },
           { id: "placeholder3", name: "FooterPlaceholder", props: {} },
-        ],
+        ]
       });
       this.selectedPageId = id;
     },
@@ -69,14 +84,6 @@ export const useMainStore = defineStore("main", {
       this.showModal = visible;
     },
     replacePlaceholder(pageId, placeholderId, component) {
-      console.log(
-        "pageId",
-        pageId,
-        " placeholderId ",
-        placeholderId,
-        " component",
-        component
-      );
       const page = this.pages.find((p) => p.id === pageId);
       if (page) {
         const index = page.content.findIndex((c) => c.id === placeholderId);
@@ -91,6 +98,7 @@ export const useMainStore = defineStore("main", {
               return acc;
             }, {}),
             content: { ...props.content },
+            added_elements: props.added_elements || [],
           };
           page.content.splice(index, 1, {
             id: component.id,
@@ -102,15 +110,7 @@ export const useMainStore = defineStore("main", {
       }
     },
     updateComponentProp(componentId, key, value) {
-      console.log(
-        "component props gets updated with componentId",
-        componentId,
-        " key ",
-        key,
-        " value",
-        value
-      );
-
+      
       if (!this.editableComponentProps[componentId]) {
         this.editableComponentProps[componentId] = {};
       }
@@ -136,6 +136,7 @@ export const useMainStore = defineStore("main", {
           }
         }
       }
+      
     },
   },
   getters: {

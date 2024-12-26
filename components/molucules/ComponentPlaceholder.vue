@@ -23,7 +23,7 @@ export default {
   props: {
     id: {
       type: String,
-      required: true,
+      //required: true,
     },
   },
   setup(props) {
