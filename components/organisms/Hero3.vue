@@ -17,10 +17,10 @@
         alignItems: styles.alignItems.value,
         justifyContent: styles.justifyContent.value,
       }"
-      class="mt-8 border border-blue-500 relative group"
+      class="mt-8  relative group"
     >
       <div
-        class="relative w-1/2 text-center flex flex-col justify-center items-center px-5 pb-8 relative"
+        class="relative w-1/2 text-center flex flex-col justify-center items-center px-5 pb-8 "
       >
         <h1
           class="text-4xl font-bold focus:outline-none focus:border-green-500"
@@ -65,6 +65,7 @@
             :is="componentMap[element.component]"
             :key="key"
             :element="element"
+            :componentId="componentId"
           />
         </div>
 
@@ -108,7 +109,9 @@ import Input from "@/components/atoms/addedElementComponents/Input.vue";
 const props = defineProps({
   content: { type: Object, required: true },
   styles: { type: Object, required: true },
+  componentId: { type: String, required: true },
 });
+console.log("componentId of the hero3 element",props.componentId)
 
 const emit = defineEmits(["input"]);
 const store = useMainStore();
@@ -124,7 +127,7 @@ const showAddElementModal = ref(false);
 const updateContent = (key, event) => {
   const value = event.target.innerText;
   emit("input", { key, value });
-  store.updateComponentProp(store.selectedComponentId, `content.${key}`, value);
+  store.updateComponentProp(props.componentId, `content.${key}`, value);
 };
 
 const openAddElementModal = () => {
@@ -137,17 +140,13 @@ const closeAddElementModal = () => {
 
 const currentContent = computed(() => {
   const page = store.pages.find((p) => p.id === store.selectedPageId);
-  const component = page?.content.find(
-    (c) => c.id === store.selectedComponentId
-  );
+  const component = page?.content.find((c) => c.id === props.componentId);
   return component ? component.props.content : {};
 });
 
 const addedElements = computed(() => {
   const page = store.pages.find((p) => p.id === store.selectedPageId);
-  const component = page?.content.find(
-    (c) => c.id === store.selectedComponentId
-  );
+  const component = page?.content.find((c) => c.id === props.componentId);
   return component ? component.props.added_elements : [];
 });
 </script>

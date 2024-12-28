@@ -36,21 +36,24 @@ export const useElementStore = defineStore("element", {
               return acc;
             }, {}),
             content: { ...props.content },
-            added_elements: props.added_elements || [], // Ensure added_elements is defined
+            added_elements: props.added_elements
+              ? JSON.parse(JSON.stringify(props.added_elements))
+              : [], // Deep copy
           };
+
+          // Generate a unique id for the added element
+          const uniqueId = `${element.id}_${componentId}_${Date.now()}`;
 
           // Add the element to the added_elements array
           defaultProps.added_elements.push({
-            id: element.id,
+            id: uniqueId,
             component: element.component,
-            styles: elementProps[element.id].styles,
-            content: elementProps[element.id].content,
+            styles: JSON.parse(JSON.stringify(elementProps[element.id].styles)), // Deep copy
+            content: JSON.parse(
+              JSON.stringify(elementProps[element.id].content)
+            ), // Deep copy
           });
 
-          const elementIndex = defaultProps.added_elements.length - 1;
-          const tempContentKey = `temp_${element.id}_${elementIndex}`;
-
-        
           // Update the component's props
           component.props.added_elements = defaultProps.added_elements;
 
@@ -61,17 +64,10 @@ export const useElementStore = defineStore("element", {
               styles: {},
             };
           }
-          // mainStore.editableComponentProps[componentId].content[
-          //   tempContentKey
-          // ] = tempContent;
-          // mainStore.editableComponentProps[componentId].styles[element.id] =
-          //   defaultProps.styles[element.id] || {};
         }
       }
     },
     updateElementProp(componentId, elementId, key, value) {
-      console.log("I am in updateElementProp")
-      console.log("componentId",componentId, " elementId",elementId, " key",key, " value",value)
       const mainStore = useMainStore();
       const page = mainStore.pages.find(
         (p) => p.id === mainStore.selectedPageId

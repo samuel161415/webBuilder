@@ -22,6 +22,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  componentId: {
+    type: String,
+    required: true,
+  },
 });
 
 const elementStore = useElementStore();
@@ -29,7 +33,7 @@ const store = useMainStore();
 
 const updateContent = (event) => {
   elementStore.updateElementProp(
-    store.selectedComponentId,
+    props.componentId, // Use props.componentId
     props.element.id,
     "content.placeholder",
     event.target.value

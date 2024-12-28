@@ -99,6 +99,7 @@ export const useMainStore = defineStore("main", {
             }, {}),
             content: { ...props.content },
             added_elements: props.added_elements || [],
+            componentId: component.id
           };
           page.content.splice(index, 1, {
             id: component.id,

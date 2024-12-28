@@ -21,6 +21,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  componentId: {
+    type: String,
+    required: true,
+  },
   onClick: Function,
 });
 
@@ -33,7 +37,7 @@ const handleClick = () => {
 
 const updateContent = (event) => {
   elementStore.updateElementProp(
-    store.selectedComponentId,
+    props.componentId, // Use props.componentId
     props.element.id,
     "content.title",
     event.target.innerText

@@ -25,6 +25,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  componentId: {
+    type: String,
+    required: true,
+  },
   isSelected: {
     type: Boolean,
     default: false, // Determines if the button is selected
@@ -47,7 +51,7 @@ const handleClick = () => {
 
 const updateContent = (event) => {
   elementStore.updateElementProp(
-    store.selectedComponentId,
+    props.componentId, // Use props.componentId
     props.element.id,
     "content.text",
     event.target.innerText

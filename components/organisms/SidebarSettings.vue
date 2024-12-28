@@ -127,7 +127,9 @@
 
         <!-- Display Styles -->
         <div class="mb-4">
-          <h2 class="text-xl font-semibold mb-2 pb-2 border-b border-gray-500">Display</h2>
+          <h2 class="text-xl font-semibold mb-2 pb-2 border-b border-gray-500">
+            Display
+          </h2>
           <div v-for="(value, key) in filteredStyles.display" :key="key">
             <div class="my-1 p-2">
               <label :for="key">{{ key }}</label>
@@ -140,30 +142,30 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <h1 class="text-lg text-green-500 my-2">Nested Styles</h1>
-      <div
-        v-for="(element, index) in selectedComponentProps.added_elements"
-        :key="index"
-      >
-        <h2 class="text-lg font-semibold mb-2">{{ element.id }}</h2>
-        <div v-for="(value, key) in element.styles" :key="key">
-          <div class="my-1 p-2 flex items-center border justify-start">
-            <label class="mr-2 pb-2 border-b" :for="key">{{ key }}:</label>
-            <component
-              :is="getComponentForStyle(value.type)"
-              :value="value.value"
-              class="focus:outline-none border-none"
-              @update="
-                updateElementProp(
-                  selectedId,
-                  element.id,
-                  `styles.${key}`,
-                  $event
-                )
-              "
-            />
+        <h1 class="text-lg text-green-500 my-2">Nested Styles</h1>
+        <div
+          v-for="(element, index) in selectedComponentProps.added_elements"
+          :key="index"
+        >
+          <h2 class="text-lg font-semibold mb-2">{{ element.id }}</h2>
+          <div v-for="(value, key) in element.styles" :key="key">
+            <div class="my-1 p-2 flex items-center border justify-start">
+              <label class="mr-2 pb-2 border-b" :for="key">{{ key }}:</label>
+              <component
+                :is="getComponentForStyle(value.type)"
+                :value="value.value"
+                class="focus:outline-none border-none"
+                @update="
+                  updateElementProp(
+                    selectedId,
+                    element.id,
+                    `styles.${key}`,
+                    $event
+                  )
+                "
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -208,16 +210,6 @@ const updateComponentProp = (section, key, value) => {
   );
 };
 const updateElementProp = (componentId, elementId, key, value) => {
-  console.log(
-    "componentId",
-    componentId,
-    "elementId",
-    elementId,
-    "key",
-    key,
-    "value",
-    value
-  );
   elementStore.updateElementProp(componentId, elementId, key, value);
 };
 
@@ -265,8 +257,5 @@ const filteredStyles = computed(() => {
   };
 });
 
-watch(selectedId, (newId) => {
-  console.log("selectedComponentId changed:", newId);
-  console.log("selected component is", selectedComponent);
-});
+
 </script>

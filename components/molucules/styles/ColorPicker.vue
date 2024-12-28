@@ -11,7 +11,6 @@
 </template>
 
 <script setup>
-console.log("am in color picker");
 const props = defineProps({
   value: {
     type: String,
