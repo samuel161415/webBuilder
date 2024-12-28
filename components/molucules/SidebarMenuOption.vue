@@ -4,8 +4,8 @@
       <li class="w-1/2" v-for="(item, index) in menuItems" :key="item.label">
         <Button
           :textColor="'text-black'"
-          :bgColor="selectedIndex === index ? 'bg-blue-400' : 'bg-white'"
-          :padding="'px-2 py-1'"
+          :bgColor="selectedIndex === index ? 'bg-green-400' : 'bg-white'"
+          :padding="'py-2 '"
           :borderRadius="''"
           :width="'w-full'"
           :isSelected="selectedIndex === index"

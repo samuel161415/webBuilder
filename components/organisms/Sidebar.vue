@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="md:w-1/4 lg:w-1/5 border border-red-500 h-screen bg-gray-100 py-4"
-  >
+  <div class="md:w-1/4 lg:w-1/5 h-full overflow-auto bg-gray-100 py-4">
     <!-- Logo -->
     <Logo />
     <!-- Sidebar Menu -->
@@ -32,8 +30,10 @@
       </ul>
       <div class="w-full p-4 border-t mt-5">
         <Button
-          :padding="'px-2 py-1'"
-          :textColor="'text-blue-500'"
+          :padding="'px-2 py-2'"
+          :textColor="'text-white'"
+          :bgColor="'bg-green-500'"
+          :width="'w-full'"
           @click="addNewPage"
         >
           Add Page
@@ -78,7 +78,9 @@ const pages = computed(() => store.pages);
 const activeTab = computed(() => store.sidebarMode);
 const selectedComponent = computed(() => store.selectedComponent);
 const selectedId = computed(() => store.selectedComponentId);
-const selectedComponentProps= computed(() => store.editableComponentProps[selectedId.value]);
+const selectedComponentProps = computed(
+  () => store.editableComponentProps[selectedId.value]
+);
 
 // console.log("selectedComponentProps", selectedComponentProps.value);
 

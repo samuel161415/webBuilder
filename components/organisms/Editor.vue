@@ -1,10 +1,25 @@
 <template>
-  <div class="flex-1 h-screen bg-white p-4">
-    <div class="w-full relative flex justify-center py-1">
-      <Button> Publish </Button>
-      <div class="absolute right-0">profile</div>
+  <div class="flex-1 h-full overflow-auto bg-white p-4">
+    <div class="w-full relative flex justify-center py-1 border mb-2">
+      <Button
+        bgColor="bg-green-500"
+        textColor="text-white"
+        padding="px-10 py-2"
+        width="w-50"
+      >
+        Publish
+      </Button>
+      <button
+        class="w-10 h-10 right-1 rounded-full border flex justify-center items-center absolute text-gray-500"
+      >
+        <i class="pi pi-user"></i>
+      </button>
     </div>
-    <div v-if="pages.length === 0" class="text-center text-gray-500">
+
+    <div
+      v-if="pages.length === 0"
+      class="h-[50vh] border flex justify-center items-center text-center text-gray-500"
+    >
       Please add a page to create page content.
     </div>
 
@@ -17,7 +32,6 @@
         @click="selectComponent(component)"
         @input="updateComponentProp(component.id, $event)"
       />
-  
     </div>
     <ComponentModal :showModal="showModal" @close="closeModal" />
   </div>
@@ -55,7 +69,6 @@ const componentMap = {
 };
 
 const selectComponent = (component) => {
-  console.log("clicking component from editor",component)
   store.setSelectedComponent(component.id);
 };
 
@@ -64,13 +77,8 @@ const closeModal = () => {
 };
 
 const updateComponentProp = (componentId, event) => {
-  console.log("updateComponentProp",componentId)
   const { key, value } = event;
-  console.log("key, value", key, value)
   store.updateComponentProp(componentId, key, value);
 };
 
-watch(currentPageContent, (newValue) => {
-  console.log("watch currentPageContent changed:", newValue);
-});
 </script>
