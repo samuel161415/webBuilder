@@ -8,7 +8,7 @@ export const useMainStore = defineStore("main", {
     pages: [], // Pages with content or placeholders
     selectedPageId: null, // Selected page ID
     selectedComponentId: null, // Selected component in the editor
-    showModal: false, // Modal visibility state
+    showModal: false, 
     registeredComponents: {
       Navigation: [
         {
