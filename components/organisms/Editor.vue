@@ -1,6 +1,12 @@
 <template>
   <div class="flex-1 h-full overflow-auto bg-white p-4">
-    <div class="w-full relative flex justify-center py-1 border mb-2">
+    <div class="w-full relative flex justify-center items-center py-1 border mb-2">
+      <button
+        class="ml-2 w-8 h-8 rounded-full border flex justify-center items-center text-gray-500 mr-5"
+        @click="togglePreview"
+      >
+        <i :class="previewMode ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+      </button>
       <Button
         bgColor="bg-green-500"
         textColor="text-white"
@@ -9,8 +15,9 @@
       >
         Publish
       </Button>
+
       <button
-        class="w-10 h-10 right-1 rounded-full border flex justify-center items-center absolute text-gray-500"
+        class="w-8 h-8 right-1 rounded-full border flex justify-center items-center absolute text-gray-500"
       >
         <i class="pi pi-user"></i>
       </button>
@@ -54,6 +61,7 @@ import SimpleBody from "./SimpleBody.vue";
 
 const store = useMainStore();
 
+const previewMode = ref(false);
 const pages = computed(() => store.pages);
 const currentPageContent = computed(() => store.currentPageContent);
 const showModal = computed(() => store.showModal);
@@ -80,5 +88,7 @@ const updateComponentProp = (componentId, event) => {
   const { key, value } = event;
   store.updateComponentProp(componentId, key, value);
 };
-
+const togglePreview = () => {
+  previewMode.value = !previewMode.value;
+};
 </script>

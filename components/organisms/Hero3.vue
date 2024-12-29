@@ -1,7 +1,8 @@
 <template>
   <div
     :style="{ backgroundColor: styles.backgroundColor.value }"
-    class="p-8 border border-red-500"
+    :class="isSelected ? 'border-2 border-dashed' : ''"
+    class="p-8"
   >
     <NavigationOption
       :navigationClass="styles.navigationDisplay.value"
@@ -17,10 +18,10 @@
         alignItems: styles.alignItems.value,
         justifyContent: styles.justifyContent.value,
       }"
-      class="mt-8  relative group"
+      class="mt-8 relative group"
     >
       <div
-        class="relative w-1/2 text-center flex flex-col justify-center items-center px-5 pb-8 "
+        class="relative w-1/2 text-center flex flex-col justify-center items-center px-5 pb-8"
       >
         <h1
           class="text-4xl font-bold focus:outline-none focus:border-green-500"
@@ -57,12 +58,10 @@
         </button>
 
         <!-- Render selected elements -->
-        <div
-          class="border border-red-500 flex flex-col min-h-[100px] min-w-[100px]"
-        >
+        <div class="flex flex-col min-h-[50px] min-w-[100px]">
           <component
             v-for="(element, key) in addedElements"
-            :is="componentMap[element.component]"
+            :is="getComponent(element.component)"
             :key="key"
             :element="element"
             :componentId="componentId"
@@ -70,7 +69,7 @@
         </div>
 
         <div
-          class="absolute bottom-0 left-1/2 transform -translate-x-1/2 p-2 bg-white border border-gray-300 rounded cursor-pointer hover:bg-gray-100"
+          class="absolute bottom-0 left-1/2 transform -translate-x-1/2 py-1 px-2 bg-white border border-gray-300 rounded cursor-pointer hover:bg-gray-100"
           @click="openAddElementModal"
         >
           <i class="pi pi-plus text-green-500"></i>
@@ -81,7 +80,7 @@
           :src="content.imageSrc"
           :alt="content.imageAlt"
           :style="{
-            height: styles.imageHeight.value,
+            minHeight: styles.imageHeight.value,
             width: styles.imageWidth.value,
             borderRadius: styles.imageBorderRadius.value,
           }"
@@ -97,30 +96,21 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, defineAsyncComponent } from "vue";
 import { defineEmits } from "vue";
 import { useMainStore } from "@/stores/main";
 import NavigationOption from "@/components/molucules/NavigationOption.vue";
 import ElementModal from "@/components/organisms/ElementModal.vue";
-import Button from "@/components/atoms/addedElementComponents/Button.vue";
-import Text from "@/components/atoms/addedElementComponents/Text.vue";
-import Input from "@/components/atoms/addedElementComponents/Input.vue";
 
 const props = defineProps({
   content: { type: Object, required: true },
   styles: { type: Object, required: true },
   componentId: { type: String, required: true },
 });
-console.log("componentId of the hero3 element",props.componentId)
+console.log("componentId of the hero3 element", props.componentId);
 
 const emit = defineEmits(["input"]);
 const store = useMainStore();
-
-const componentMap = {
-  Button,
-  Text,
-  Input,
-};
 
 const showAddElementModal = ref(false);
 
@@ -137,6 +127,9 @@ const openAddElementModal = () => {
 const closeAddElementModal = () => {
   showAddElementModal.value = false;
 };
+const isSelected = computed(
+  () => store.selectedComponentId === props.componentId
+);
 
 const currentContent = computed(() => {
   const page = store.pages.find((p) => p.id === store.selectedPageId);
@@ -149,4 +142,10 @@ const addedElements = computed(() => {
   const component = page?.content.find((c) => c.id === props.componentId);
   return component ? component.props.added_elements : [];
 });
+
+const getComponent = (componentName) => {
+  return defineAsyncComponent(() =>
+    import(`@/components/atoms/addedElementComponents/${componentName}.vue`)
+  );
+};
 </script>

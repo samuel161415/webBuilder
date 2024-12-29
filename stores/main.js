@@ -41,19 +41,23 @@ export const useMainStore = defineStore("main", {
       this.sidebarMode = mode;
     },
     addPage(page) {
+      console.log("page is ", page.name);
       const id = Date.now();
+      const route = page.name.toLowerCase().replace(/\s+/g, "-");
       this.pages.push({
         id,
         ...page,
+        route,
         content: [
           { id: "placeholder1", name: "NavigationPlaceholder", props: {} },
           { id: "placeholder2", name: "ComponentPlaceholder", props: {} },
           { id: "placeholder3", name: "FooterPlaceholder", props: {} },
-        ]
+        ],
       });
       this.selectedPageId = id;
     },
     updatePage(updatedPage) {
+      console.log("updated page is ", updatedPage);
       const index = this.pages.findIndex((p) => p.id === updatedPage.id);
       if (index !== -1) {
         this.pages[index] = updatedPage;
@@ -99,19 +103,29 @@ export const useMainStore = defineStore("main", {
             }, {}),
             content: { ...props.content },
             added_elements: props.added_elements || [],
-            componentId: component.id
+            componentId: component.id,
           };
-          page.content.splice(index, 1, {
-            id: component.id,
-            name: component.component,
-            props: defaultProps,
-          });
+
+          if (placeholderId === "placeholder1") {
+            // Replace NavigationPlaceholder
+            page.content.splice(index, 1, {
+              id: component.id,
+              name: component.component,
+              props: defaultProps,
+            });
+          } else if (placeholderId === "placeholder2") {
+            // Add component and keep ComponentPlaceholder at the end
+            page.content.splice(index, 0, {
+              id: component.id,
+              name: component.component,
+              props: defaultProps,
+            });
+          }
         }
         this.setSelectedComponent(component.id);
       }
     },
     updateComponentProp(componentId, key, value) {
-      
       if (!this.editableComponentProps[componentId]) {
         this.editableComponentProps[componentId] = {};
       }
@@ -137,7 +151,6 @@ export const useMainStore = defineStore("main", {
           }
         }
       }
-      
     },
   },
   getters: {

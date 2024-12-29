@@ -24,6 +24,58 @@ export const componentProps = {
     },
     added_elements: [],
   },
+  hero1: {
+    styles: {
+      backgroundColor: { type: "color", value: "#000C18" }, // Dark purple
+      textColor: { type: "color", value: "#ffffff" }, // Purple
+      secondTextColor: { type: "color", value: "#4B0082" }, // Purple
+      display: { type: "display", value: "flex" },
+      flexDirection: { type: "display", value: "column" },
+      alignItems: { type: "display", value: "center" },
+      justifyContent: { type: "display", value: "center" },
+      // height: { type: "dimension", value: "500px" },
+      buttonBgColor: { type: "color", value: "#22c55e" },
+      buttonTextColor: { type: "color", value: "#ffffff" },
+      buttonPadding: { type: "space", value: "8px 16px" },
+      navigationDisplay: { type: "display", value: "flex" },
+      navigationJustify: { type: "display", value: "space-between" },
+      navigationColor: { type: "color", value: "#1f2937" },
+    },
+    content: {
+      title: "Make Your Payment Transaction Easy and",
+      titleSecond:"¨Professional",
+      description: "This is a hero description.",
+      buttonText: "Click Me",
+      items: ["Home", "About", "Contact"],
+    },
+    added_elements: [],
+  },
+  hero2: {
+    styles: {
+      textColor: { type: "color", value: "#ffffff" },
+      buttonBgColor: { type: "color", value: "#22c55e" },
+      buttonTextColor: { type: "color", value: "#ffffff" },
+      display: { type: "display", value: "flex" },
+      flexDirection: { type: "display", value: "column" },
+      alignItems: { type: "display", value: "center" },
+      justifyContent: { type: "display", value: "center" },
+      height: { type: "dimension", value: "500px" },
+      imageOpacity: { type: "dimension", value: "0.8" },
+      buttonPadding: { type: "space", value: "8px 16px" },
+      navigationDisplay: { type: "display", value: "flex" },
+      navigationJustify: { type: "display", value: "space-between" },
+      navigationColor: { type: "color", value: "#1f2937" },
+    },
+    content: {
+      title: "Hero Title",
+      description: "This is a hero description.",
+      imgSrc: "/images/imbg.jpg",
+      imageAlt: "Image description",
+      buttonText: "Click Me",
+      items: ["Home", "About", "Contact"],
+    },
+    added_elements: [],
+  },
   hero3: {
     styles: {
       backgroundColor: { type: "color", value: "#ffffff" },
