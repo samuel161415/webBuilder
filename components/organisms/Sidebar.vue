@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <div v-else class="mt-3 p-2">
+    <div v-else class="mt-3 ">
       <p v-if="!selectedComponentProps">
         Please select a component to edit in the editor section.
       </p>
@@ -64,8 +64,8 @@ import { ref, computed } from "vue";
 import { useMainStore } from "@/stores/main";
 import Button from "@/components/atoms/Button.vue";
 import Logo from "@/components/atoms/Logo.vue";
-import SidebarMenu from "@/components/molucules/SidebarMenuOption.vue";
-import EditPageModal from "@/components/molucules/EditPageModal.vue";
+import SidebarMenu from "@/components/molecules/SidebarMenuOption.vue";
+import EditPageModal from "@/components/molecules/EditPageModal.vue";
 import SidebarSettings from "./SidebarSettings.vue";
 
 const store = useMainStore();

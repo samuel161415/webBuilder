@@ -80,6 +80,8 @@ import { useElementStore } from "@/stores/element";
 
 const props = defineProps({
   showModal: Boolean,
+  section: String,
+  position: Number,
 });
 
 const emit = defineEmits(["close"]);
@@ -92,12 +94,10 @@ const elements = computed(() => {
 });
 
 const generateImgSrc = (imgSrc) => {
-  console.log("imgSrc", imgSrc);
   return imgSrc;
 };
 
 const filteredElements = computed(() => {
-    console.log("elements in the modal",elements.value)
   return elements.value.filter((element) =>
     element.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
@@ -105,7 +105,7 @@ const filteredElements = computed(() => {
 
 const selectElement = (element) => {
   store.setSelectedElement(element);
-  store.addElementToComponent(); // Add the selected element to the component
+  store.addElementToComponent(props.section, props.position); // Pass the section and index
   emit("close");
 };
 

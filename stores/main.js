@@ -8,7 +8,7 @@ export const useMainStore = defineStore("main", {
     pages: [], // Pages with content or placeholders
     selectedPageId: null, // Selected page ID
     selectedComponentId: null, // Selected component in the editor
-    showModal: false, 
+    showModal: false,
     registeredComponents: {
       Navigation: [
         {
@@ -41,7 +41,6 @@ export const useMainStore = defineStore("main", {
       this.sidebarMode = mode;
     },
     addPage(page) {
-      console.log("page is ", page.name);
       const id = Date.now();
       const route = page.name.toLowerCase().replace(/\s+/g, "-");
       this.pages.push({
@@ -57,7 +56,6 @@ export const useMainStore = defineStore("main", {
       this.selectedPageId = id;
     },
     updatePage(updatedPage) {
-      console.log("updated page is ", updatedPage);
       const index = this.pages.findIndex((p) => p.id === updatedPage.id);
       if (index !== -1) {
         this.pages[index] = updatedPage;
@@ -93,6 +91,7 @@ export const useMainStore = defineStore("main", {
         const index = page.content.findIndex((c) => c.id === placeholderId);
         if (index !== -1) {
           const props = componentProps[component.id] || {};
+          console.log("hero 3 prop selected is ", props);
           const defaultProps = {
             styles: Object.keys(props.styles).reduce((acc, key) => {
               acc[key] = {
@@ -102,9 +101,11 @@ export const useMainStore = defineStore("main", {
               return acc;
             }, {}),
             content: { ...props.content },
-            added_elements: props.added_elements || [],
+            sections: props.sections || {},
             componentId: component.id,
           };
+
+          console.log("defaultProps", defaultProps);
 
           if (placeholderId === "placeholder1") {
             // Replace NavigationPlaceholder
@@ -113,6 +114,8 @@ export const useMainStore = defineStore("main", {
               name: component.component,
               props: defaultProps,
             });
+
+
           } else if (placeholderId === "placeholder2") {
             // Add component and keep ComponentPlaceholder at the end
             page.content.splice(index, 0, {
@@ -126,6 +129,7 @@ export const useMainStore = defineStore("main", {
       }
     },
     updateComponentProp(componentId, key, value) {
+      console.log("componentId", componentId, "key", key, "value", value);
       if (!this.editableComponentProps[componentId]) {
         this.editableComponentProps[componentId] = {};
       }

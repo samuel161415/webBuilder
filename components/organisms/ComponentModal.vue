@@ -103,7 +103,6 @@ const components = computed(() => {
 });
 
 const generateImgSrc=(imgSrc)=>{
-  console.log("imgSrc",imgSrc)
   return imgSrc
 }
 

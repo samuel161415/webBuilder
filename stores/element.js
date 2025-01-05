@@ -8,23 +8,28 @@ export const useElementStore = defineStore("element", {
       { id: "button", name: "Button", component: "Button" },
       { id: "text", name: "Text", component: "Text" },
       { id: "input", name: "Input", component: "Input" },
+      { id: "headline", name: "Headline", component: "Headline" },
+      { id: "image", name: "Image", component: "Image" },
     ],
   }),
   actions: {
     setSelectedElement(element) {
       this.selectedElement = element;
     },
-    addElementToComponent() {
+    addElementToComponent(section, index) {
+      console.log("section",section, "index",index)
       const mainStore = useMainStore();
       const pageId = mainStore.selectedPageId;
       const componentId = mainStore.selectedComponentId;
       const element = this.selectedElement;
+      console.log("addElementToComponent", element, section, index);
 
       if (!pageId || !componentId || !element) return;
 
       const page = mainStore.pages.find((p) => p.id === pageId);
       if (page) {
         const component = page.content.find((c) => c.id === componentId);
+        console.log("component with selected value", component);
         if (component) {
           const props = component.props || {};
           const defaultProps = {
@@ -36,16 +41,19 @@ export const useElementStore = defineStore("element", {
               return acc;
             }, {}),
             content: { ...props.content },
-            added_elements: props.added_elements
-              ? JSON.parse(JSON.stringify(props.added_elements))
-              : [], // Deep copy
+            sections: props.sections
+              ? JSON.parse(JSON.stringify(props.sections))
+              : {}, // Deep copy
           };
 
           // Generate a unique id for the added element
           const uniqueId = `${element.id}_${componentId}_${Date.now()}`;
 
-          // Add the element to the added_elements array
-          defaultProps.added_elements.push({
+          // Add the element to the appropriate section at the specified index
+          if (!defaultProps.sections[section]) {
+            defaultProps.sections[section] = [];
+          }
+          defaultProps.sections[section].splice(index, 0, {
             id: uniqueId,
             component: element.component,
             styles: JSON.parse(JSON.stringify(elementProps[element.id].styles)), // Deep copy
@@ -55,7 +63,7 @@ export const useElementStore = defineStore("element", {
           });
 
           // Update the component's props
-          component.props.added_elements = defaultProps.added_elements;
+          component.props.sections = defaultProps.sections;
 
           // Update the editableComponentProps
           if (!mainStore.editableComponentProps[componentId]) {
@@ -67,7 +75,28 @@ export const useElementStore = defineStore("element", {
         }
       }
     },
-    updateElementProp(componentId, elementId, key, value) {
+    removeElementFromComponent(section, elementId) {
+      console.log("removeElementFromComponent", section, elementId);
+      const mainStore = useMainStore();
+      const pageId = mainStore.selectedPageId;
+      const componentId = mainStore.selectedComponentId;
+      if (!pageId || !componentId) return;
+
+      const page = mainStore.pages.find((p) => p.id === pageId);
+      if (page) {
+        const component = page.content.find((c) => c.id === componentId);
+        if (component && component.props.sections[section]) {
+          const elementIndex = component.props.sections[section].findIndex(
+            (e) => e.id === elementId
+          );
+          if (elementIndex !== -1) {
+            component.props.sections[section].splice(elementIndex, 1);
+          }
+        }
+      }
+    },
+    updateElementProp(componentId, elementId, key, value, section) {
+      console.log("updateElementProp", componentId, elementId, key, value);
       const mainStore = useMainStore();
       const page = mainStore.pages.find(
         (p) => p.id === mainStore.selectedPageId
@@ -75,15 +104,16 @@ export const useElementStore = defineStore("element", {
       if (page) {
         const component = page.content.find((c) => c.id === componentId);
         if (component) {
-          const element = component.props.added_elements.find(
-            (e) => e.id === elementId
-          );
-          if (element) {
-            const [section, propKey] = key.split(".");
-            if (section === "content") {
-              element.content[propKey] = value;
-            } else if (section === "styles") {
-              element.styles[propKey].value = value;
+          const elementSection = component.props.sections[section];
+          if (elementSection) {
+            const element = elementSection.find((e) => e.id === elementId);
+            if (element) {
+              const [propSection, propKey] = key.split(".");
+              if (propSection === "content") {
+                element.content[propKey] = value;
+              } else if (propSection === "styles") {
+                element.styles[propKey].value = value;
+              }
             }
           }
         }

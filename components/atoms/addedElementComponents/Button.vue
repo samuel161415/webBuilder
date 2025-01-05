@@ -1,13 +1,14 @@
 <template>
   <button
     :style="{
-      padding: `${element.styles.paddingVertical.value} ${element.styles.paddingHorizontal.value}`,
-      margin: element.styles.margin?.value,
-      borderRadius: element.styles.borderRadius?.value,
-      color: element.styles.textColor?.value,
-      backgroundColor: element.styles.buttonBgColor?.value,
+      padding: `${element.styles?.paddingY?.value} ${element.styles?.paddingX?.value}`,
+      margin: `${element.styles?.marginY?.value} ${element.styles?.marginX?.value}`,
+      borderRadius: element.styles?.borderRadius?.value,
+      color: element.styles?.textColor?.value,
+      backgroundColor: element.styles?.buttonBgColor?.value,
+      color: element.styles?.buttonTextColor?.value,
     }"
-    class="focus:outline-none focus:border-green-500"
+    class="focus:outline-none focus:border-green-500 "
     @click="handleClick"
     contenteditable="true"
     @input="updateContent($event)"
@@ -33,8 +34,14 @@ const props = defineProps({
     type: Boolean,
     default: false, // Determines if the button is selected
   },
+  section: {
+    type: String,
+    required: true,
+  },
   onClick: Function, // Click handler
 });
+
+console.log("prop data in button ", props.element);
 
 const elementStore = useElementStore();
 const store = useMainStore();
@@ -54,7 +61,8 @@ const updateContent = (event) => {
     props.componentId, // Use props.componentId
     props.element.id,
     "content.text",
-    event.target.innerText
+    event.target.innerText,
+    props.section // Pass the section
   );
 };
 </script>

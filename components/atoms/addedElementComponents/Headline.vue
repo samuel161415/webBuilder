@@ -1,5 +1,5 @@
 <template>
-  <p
+  <h1
     :style="{
       padding: `${element.styles?.paddingY?.value} ${element.styles?.paddingX?.value}`,
       margin: `${element.styles?.marginY?.value} ${element.styles?.marginX?.value}`,
@@ -15,7 +15,7 @@
     @input="updateContent($event)"
   >
     {{ element.content.title }}
-  </p>
+  </h1>
 </template>
 
 <script setup>

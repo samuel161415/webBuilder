@@ -1,15 +1,16 @@
 <template>
   <input
-    :value="element.content.placeholder"
+    :value="element.content.value"
     :placeholder="element.content.placeholder"
     @input="updateContent($event)"
-    class="focus:outline-none focus:border-green-500 border border-2"
+    class="focus:outline-none focus:border-green-500 border-2"
     :style="{
-      padding: element.styles.padding?.value,
-      margin: element.styles.margin?.value,
-      borderRadius: element.styles.borderRadius?.value,
-      border: element.styles.border?.value,
-      borderColor: element.styles.borderColor?.value,
+      padding: `${element.styles?.paddingY?.value} ${element.styles?.paddingX?.value}`,
+      margin: `${element.styles?.marginY?.value} ${element.styles?.marginX?.value}`,
+      margin: element.styles?.margin?.value,
+      borderRadius: element.styles?.borderRadius?.value,
+      border: element.styles?.border?.value,
+      borderColor: element.styles?.borderColor?.value,
     }"
   />
 </template>
@@ -26,6 +27,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  section: {
+    type: String,
+    required: true,
+  },
 });
 
 const elementStore = useElementStore();
@@ -36,7 +41,8 @@ const updateContent = (event) => {
     props.componentId, // Use props.componentId
     props.element.id,
     "content.placeholder",
-    event.target.value
+    event.target.value,
+    props.section // Pass the section
   );
 };
 </script>
